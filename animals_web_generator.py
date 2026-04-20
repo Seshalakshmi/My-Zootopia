@@ -16,10 +16,12 @@ for data in animals_data:
         if (data['name'] and data['characteristics']['diet']
                 and data['locations'][0] and data['characteristics']['type']):
             output += f'<li class="cards__item">'
-            output += f"Name: {data['name']}<br>\n"
-            output += f"Diet: {data['characteristics']['diet']}<br>\n"
-            output += f"Location: {data['locations'][0]}<br>\n"
-            output += f"Type: {data['characteristics']['type']}<br>\n"
+            output += f'<p class="card__text">'
+            output += f'<div class="card__title">{data['name']}</div><br>'
+            output += f"<strong>Diet:</strong> {data['characteristics']['diet']}<br><br>\n"
+            output += f"<strong>Location:</strong> {data['locations'][0]}<br><br>\n"
+            output += f"<strong>Type:</strong> {data['characteristics']['type']}<br>\n"
+            output += f'</p>'
             output += f'</li>'
     except KeyError:
         continue
