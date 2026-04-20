@@ -1,6 +1,8 @@
 import json
+from idlelib.replace import replace
 
 FILE_PATH = "animals_data.json"
+HTML_FILE_PATH = "animals_template.html"
 
 def load_data(file_path):
     """ Loads a JSON file """
@@ -8,14 +10,22 @@ def load_data(file_path):
         return json.load(handle)
 
 animals_data = load_data(FILE_PATH)
+output = ''
 for data in animals_data:
     try:
         if (data['name'] and data['characteristics']['diet']
                 and data['locations'][0] and data['characteristics']['type']):
-            print(f"Name: {data['name']}\n"
-                  f"Diet: {data['characteristics']['diet']}\n"
-                  f"Location: {data['locations'][0]}\n"
-                  f"Type: {data['characteristics']['type']}")
-            print()
+            output += f"Name: {data['name']}\n"
+            output += f"Diet: {data['characteristics']['diet']}\n"
+            output += f"Location: {data['locations'][0]}\n"
+            output += f"Type: {data['characteristics']['type']}\n"
+            output += "\n"
     except KeyError:
         continue
+
+with open(HTML_FILE_PATH, "r") as read_file:
+    read_html = read_file.read().replace("__REPLACE_ANIMALS_INFO__",
+                                         output)
+
+with open("animals.html", "w") as write_file:
+    write_file.write(read_html)
