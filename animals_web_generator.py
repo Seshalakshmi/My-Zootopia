@@ -38,14 +38,31 @@ def serialize_animal(animal_obj):
         str: A string containing the formatted HTML representation
         of the animal.
     """
+    animal_name = animal_obj.get("name")
+    animal_type = animal_obj.get("characteristics", {}).get("type", 0)
+    animal_location = animal_obj.get("locations")[0]
+    animal_diet = animal_obj.get("characteristics", {}).get("diet")
+    animal_skin_type = animal_obj.get("characteristics", {}).get("skin_type")
+    animal_life_span = animal_obj.get("characteristics", {}).get("lifespan")
+
     html_part = '<li class="cards__item"><strong>title: </strong>content</li>'
     title_open_tag, title_closing_tag = html_part.split('title')
     content_open_tag, content_closing_tag = title_closing_tag.split('content')
-    contents = {"Diet": animal_obj["characteristics"]["diet"],
-                "Location": animal_obj["locations"][0],
-                "Type": animal_obj["characteristics"]["type"],
-                "Skin Type": animal_obj["characteristics"]["skin_type"],
-                "Life expectancy": animal_obj["characteristics"]["lifespan"]}
+    if animal_type:
+        contents = {
+            "Diet": animal_diet,
+            "Location": animal_location,
+            "Type": animal_type,
+            "Skin Type": animal_skin_type,
+            "Life expectancy": animal_life_span
+        }
+    else:
+        contents = {
+            "Diet": animal_diet,
+            "Location": animal_location,
+            "Skin Type": animal_skin_type,
+            "Life expectancy": animal_life_span
+        }
     serialized_contents = [
         title_open_tag + title + content_open_tag + content +
         content_closing_tag
@@ -54,7 +71,7 @@ def serialize_animal(animal_obj):
 
     parts = [
         '<li class="cards__item">',
-        f'<div class="card__title">{animal_obj["name"]}</div>',
+        f'<div class="card__title">{animal_name}</div>',
         '<div class="card__text">',
         '<ul class="cards">',
         animal_detail,
@@ -107,11 +124,6 @@ def filter_by_skin_type(animals_list, skin_type):
         if (
                 animal.get("characteristics", {}).get(
                     "skin_type") == skin_type.capitalize()
-                and animal.get("name")
-                and animal.get("characteristics", {}).get("diet")
-                and animal.get("locations")
-                and animal.get("locations")[0]
-                and animal.get("characteristics", {}).get("type")
         ):
             output.append(serialize_animal(animal))
 
