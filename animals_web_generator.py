@@ -38,31 +38,26 @@ def serialize_animal(animal_obj):
         str: A string containing the formatted HTML representation
         of the animal.
     """
+    html_part = '<li class="cards__item"><strong>title: </strong>content</li>'
+    title_open_tag, title_closing_tag = html_part.split('title')
+    content_open_tag, content_closing_tag = title_closing_tag.split('content')
+    contents = {"Diet": animal_obj["characteristics"]["diet"],
+                "Location": animal_obj["locations"][0],
+                "Type": animal_obj["characteristics"]["type"],
+                "Skin Type": animal_obj["characteristics"]["skin_type"],
+                "Life expectancy": animal_obj["characteristics"]["lifespan"]}
+    serialized_contents = [
+        title_open_tag + title + content_open_tag + content +
+        content_closing_tag
+        for title, content in contents.items()]
+    animal_detail = '\n'.join(serialized_contents)
+
     parts = [
         '<li class="cards__item">',
         f'<div class="card__title">{animal_obj["name"]}</div>',
         '<div class="card__text">',
         '<ul class="cards">',
-        (
-            f'<li class="cards__item"><strong>Diet:</strong> '
-            f'{animal_obj["characteristics"]["diet"]}</li>'
-        ),
-        (
-            f'<li class="cards__item"><strong>Location:</strong> '
-            f'{animal_obj["locations"][0]}</li>'
-        ),
-        (
-            f'<li class="cards__item"><strong>Type:</strong> '
-            f'{animal_obj["characteristics"]["type"]}</li>'
-        ),
-        (
-            f'<li class="cards__item"><strong>Skin Type:</strong> '
-            f'{animal_obj["characteristics"]["skin_type"]}</li>'
-        ),
-        (
-            f'<li class="cards__item"><strong>Life expectancy:</strong> '
-            f'{animal_obj["characteristics"]["lifespan"]}</li>'
-        ),
+        animal_detail,
         '</ul>',
         '</div>',
         '</li>',
@@ -104,18 +99,19 @@ def filter_by_skin_type(animals_list, skin_type):
 
        Returns:
            list[str]: A list of HTML strings representing matching animals.
-           If no animals match the criteria, a fallback HTML message is returned.
+           If no animals match the criteria, a fallback HTML message is
+           returned.
     """
     output = []
     for animal in animals_list:
         if (
-              animal.get("characteristics", {}).get(
-                  "skin_type") == skin_type.capitalize()
-              and animal.get("name")
-              and animal.get("characteristics", {}).get("diet")
-              and animal.get("locations")
-              and animal.get("locations")[0]
-              and animal.get("characteristics", {}).get("type")
+                animal.get("characteristics", {}).get(
+                    "skin_type") == skin_type.capitalize()
+                and animal.get("name")
+                and animal.get("characteristics", {}).get("diet")
+                and animal.get("locations")
+                and animal.get("locations")[0]
+                and animal.get("characteristics", {}).get("type")
         ):
             output.append(serialize_animal(animal))
 
